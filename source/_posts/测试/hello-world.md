@@ -170,7 +170,7 @@ namespace Edmonds_Karp {
 
 > 注意到这个图（下面还会再出现一次）
 >
-> <img src="https://img2023.cnblogs.com/blog/3293327/202312/3293327-20231229215552943-863442351.png" style="zoom:200%;" />
+> <img src="/blog/images/2026/10/mvr0gu90-cz94.png" style="zoom:200%;" />
 >
 > 设左边一排点 **从上到下** 为 $L_1 \sim L_5$，中间为 $M$，右边 **从上到下** 为 $R_1 \sim R_5$，后链接 **汇点**
 >
@@ -240,7 +240,7 @@ namespace Dinic {
 >
 > 所以前序遍历过的边就没有再次遍历的必要了，由于当前弧指针是单调的，故保证了单轮 DFS 为 $\text O(nm)$
 >
-> <img src="https://img2023.cnblogs.com/blog/3293327/202312/3293327-20231229215552943-863442351.png" style="zoom:200%;" />
+> <img src="/blog/images/2026/10/mvr0gu90-cz94.png" style="zoom:200%;" />
 >
 > ##### 一些 容易忘 的地方
 >
@@ -1985,13 +1985,13 @@ $N$ 个 小师傅 做 $M$ 个任务 的咩！有完成时间，求 **最小时�
 >
 > #### **两 面 包 夹 芝 士**
 >
-> <img src="https://img2024.cnblogs.com/blog/3293327/202403/3293327-20240308145758470-1910002511.png" style="zoom: 60%;" />
+> <img src="/blog/images/2026/10/mvr0gw8x-uoz6.webp" style="zoom: 60%;" />
 >
 > 这个是 **最优解**
 >
 > <br/>
 >
-> <img src="https://img2024.cnblogs.com/blog/3293327/202403/3293327-20240308145752082-561106185.png" style="zoom:68%;" />
+> <img src="/blog/images/2026/10/mvr0gy5g-1m5t.webp" style="zoom:68%;" />
 >
 > 这个是 **最劣解**
 >
