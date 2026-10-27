@@ -3,29 +3,6 @@
    配色取自原站：主色 #5c8ec6，正文 #4a4a4a
    ======================================================== */
 
-/* 标题字体自托管，避免依赖 Google Fonts */
-@font-face {
-  font-family: 'Merriweather';
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url('../fonts/merriweather-300.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Merriweather';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/merriweather-400.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Merriweather';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('../fonts/merriweather-700.woff2') format('woff2');
-}
-
 :root {
   --primary: #5c8ec6;
   --primary-dark: #4a7bb0;
@@ -93,7 +70,9 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: Merriweather, "Open Sans", "PingFang SC", "Microsoft Yahei", -apple-system, sans-serif;
+  /* 与 Typora 一致：系统无衬线，标题与正文同族 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei",
+               "PingFang SC", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.75;
   color: var(--text);
@@ -101,7 +80,7 @@ body {
   transition: background .25s, color .25s;
 }
 
-/* 标题统一用衬线字体，和原站一致 */
+/* Typora 里标题不加粗、不分族，只靠字号区分；这里只加粗到 600 */
 .site-title,
 .post-title,
 .widget-title,
@@ -109,8 +88,10 @@ body {
 .post-content h1,
 .post-content h2,
 .post-content h3,
-.post-content h4 {
-  font-family: Merriweather, Georgia, "Songti SC", "SimSun", serif;
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+  font-family: inherit;
 }
 
 a { color: var(--primary); text-decoration: none; transition: color .15s; }
@@ -415,6 +396,13 @@ body.dark .navbar.scrolled {
 .post-content h5 { font-size: 1.12rem; }
 .post-content h6 { font-size: 1rem; color: var(--text-light); }
 
+/* 文章里残留的 <font size=4> 会把后面整段正文放大，这里忽略 size，只保留颜色 */
+.post-content font[size] { font-size: inherit !important; }
+
+/* 与 Typora 一致：加粗只加粗，不改变字号与颜色 */
+.post-content strong,
+.post-content b { font-weight: 700; color: inherit; }
+
 .post-content p { margin: .9em 0; }
 
 .post-content a { border-bottom: 1px solid var(--primary-light); }
@@ -700,10 +688,21 @@ body.dark .post-content code { color: #e5a0a0; }
 .sidebar {
   position: sticky;
   top: 76px;
+  /* 高度锁在视口内并内部滚动，否则内容比屏幕高时 sticky 会失效、目录跟着滚走 */
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  padding-right: 4px;
   display: flex;
   flex-direction: column;
   gap: 18px;
   transition: opacity .25s;
+  scrollbar-width: thin;
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }
 
 /* 桌面端：MENU 把侧栏整体收起，主内容占满 */

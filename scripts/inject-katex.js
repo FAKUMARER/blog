@@ -16,6 +16,33 @@ hexo.extend.filter.register('after_init', function () {
   if (renderer) renderer.disableNunjucks = true;
 });
 
+// 引用块里的 ">文字"（> 后没有空格）在 fenced code 内会让 markdown-it 把 ">" 留在代码里。
+// 渲染前补空格，渲染后再对代码块兜底清理一次。
+hexo.extend.filter.register('before_post_render', function (data) {
+  data.content = data.content.replace(/^>(\S)/gm, '> $1');
+  return data;
+});
+
+// KaTeX 会把公式输出两份（MathML + 视觉 HTML），直接抽文本会让标题重复一遍，
+// 这里把标题内的 MathML 副本去掉，同时清理正文里的 [toc] 占位。
+hexo.extend.filter.register('after_post_render', function (data) {
+  data.content = data.content.replace(/<h([1-6])([^>]*)>([\s\S]*?)<\/h\1>/g, function (m, lvl, attrs, inner) {
+    var cleaned = inner.replace(/<span class="katex-mathml"><math[\s\S]*?<\/math><\/span>/g, '');
+    return '<h' + lvl + attrs + '>' + cleaned + '</h' + lvl + '>';
+  });
+  data.content = data.content.replace(/<p>\[toc\]<\/p>/gi, '');
+  // 未闭合的 <font size=4> 会把后面所有 DOM（含侧边栏）包进去，导致 sticky 失效。
+  // 只删带 size 的开标签，color 的保留。
+  data.content = data.content.replace(/<font\s+size\s*=\s*["']?\d+["']?\s*>/gi, '');
+  // 博客园图床有防盗链，带本站 Referer 会 403，图片标签统一不发送 Referer
+  data.content = data.content.replace(/<img /g, '<img referrerpolicy="no-referrer" ');
+  // 兜底：去掉代码块每行开头被误留下的 ">"
+  data.content = data.content.replace(/(<figure class="highlight[^"]*">[\s\S]*?<\/figure>)/g, function (block) {
+    return block.replace(/<span class="line">&gt;/g, '<span class="line">');
+  });
+  return data;
+});
+
 hexo.extend.filter.register('after_render:html', function (str) {
   if (!str.includes('class="katex"')) return str;
   if (str.includes('katex.min.css')) return str;
