@@ -10,7 +10,11 @@
 
     <% if (w === 'profile') { %>
       <section class="widget profile">
-        <img class="avatar" src="<%- theme.avatar %>" alt="<%- theme.author %>">
+        <% if (theme.avatar) { %>
+          <img class="avatar" src="<%- theme.avatar %>" alt="<%- theme.author %>">
+        <% } else { %>
+          <div class="avatar avatar-text"><%- (theme.author || 'A').trim().slice(0, 1).toUpperCase() %></div>
+        <% } %>
         <h3 class="profile-name"><%- theme.author %></h3>
         <p class="profile-intro"><%- theme.intro %></p>
       </section>

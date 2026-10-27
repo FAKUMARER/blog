@@ -1,4 +1,4 @@
-/* ========================================================
+﻿/* ========================================================
    博客园风格主题（SimpleMemory 等效实现）
    配色取自原站：主色 #5c8ec6，正文 #4a4a4a
    ======================================================== */
@@ -748,6 +748,17 @@ body.sidebar-open .sidebar-mask { display: block; }
   border: 3px solid var(--primary-light);
 }
 
+/* 没设置头像时用首字母占位 */
+.avatar-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #7ba7d4);
+}
+
 .profile-name { margin: 12px 0 6px; font-size: 15px; font-weight: 600; }
 .profile-intro { margin: 0; font-size: 12.5px; line-height: 1.7; color: var(--text-light); }
 
@@ -899,3 +910,117 @@ body.sidebar-open .sidebar-mask { display: block; }
   .post-card { padding: 16px; }
   .post-meta { gap: 10px; font-size: 12px; }
 }
+/* ============ 加密文章的密码框（hexo-blog-encrypt）============ */
+/* 插件默认是「浮动标签」结构，label 绝对定位贴在 input 上方，
+   这里把 label 拉回文档流当作说明文字，避免和 input 重叠。 */
+#hexo-blog-encrypt.hbe-container {
+  margin: 1.8em 0;
+  padding: 26px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  text-align: center;
+}
+
+#hexo-blog-encrypt .hbe-content,
+#hexo-blog-encrypt .hbe-form {
+  display: block;
+  margin: 0;
+}
+
+#hexo-blog-encrypt .hbe-input {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: min(320px, 100%);
+  margin: 0 auto;
+  background: none;
+  box-shadow: none;
+}
+
+#hexo-blog-encrypt .hbe-input-label {
+  order: -1;
+  background: none !important;
+  box-shadow: none !important;
+  position: static !important;
+  display: block !important;
+  margin: 0 0 6px !important;
+  padding: 0 !important;
+  transform: none !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: var(--text-light) !important;
+  text-align: left !important;
+  pointer-events: none;
+  white-space: normal;
+}
+
+#hexo-blog-encrypt .hbe-input-label-content {
+  position: static !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: block !important;
+  padding: 0 !important;
+  transform: none !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  background: none !important;
+}
+
+/* 插件用伪元素画了输入框的装饰块，这里一并去掉 */
+#hexo-blog-encrypt .hbe-input-label::before,
+#hexo-blog-encrypt .hbe-input-label::after,
+#hexo-blog-encrypt .hbe-input-label-content::before,
+#hexo-blog-encrypt .hbe-input-label-content::after,
+#hexo-blog-encrypt .hbe-input::before,
+#hexo-blog-encrypt .hbe-input::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+#hexo-blog-encrypt .hbe-input-field {
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 9px 12px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  box-shadow: none !important;
+  outline: none;
+  transition: border-color .15s;
+}
+
+#hexo-blog-encrypt .hbe-input-field:focus { border-color: var(--primary) !important; }
+
+#hexo-blog-encrypt .hbe-button {
+  width: auto !important;
+  margin-top: 14px !important;
+  padding: 8px 24px !important;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  background: var(--primary) !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+
+#hexo-blog-encrypt .hbe-button:hover { opacity: .88; }
+#hexo-blog-encrypt .hbe-button:disabled { opacity: .6; cursor: default; }
+
+#hexo-blog-encrypt .hbe-error {
+  min-height: 1em;
+  margin-top: 10px;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+body.dark #hexo-blog-encrypt .hbe-error { color: #e57373; }

@@ -44,7 +44,9 @@ hexo.extend.filter.register('after_post_render', function (data) {
 });
 
 hexo.extend.filter.register('after_render:html', function (str) {
-  if (!str.includes('class="katex"')) return str;
+  // 加密文章的公式在密文里，HTML 里查不到 class="katex"，但解密后会显示出来，
+  // 所以页面上出现了加密容器时也要注入样式，否则 MathML 会裸露、公式重复一遍。
+  if (!str.includes('class="katex"') && !str.includes('id="hexo-blog-encrypt"')) return str;
   if (str.includes('katex.min.css')) return str;
   if (!str.includes('</head>')) return str;
   return str.replace('</head>', `  ${KATEX_CSS}\n</head>`);
