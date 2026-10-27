@@ -3,6 +3,29 @@
    配色取自原站：主色 #5c8ec6，正文 #4a4a4a
    ======================================================== */
 
+/* 标题字体自托管，避免依赖 Google Fonts */
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('../fonts/merriweather-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/merriweather-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/merriweather-700.woff2') format('woff2');
+}
+
 :root {
   --primary: #5c8ec6;
   --primary-dark: #4a7bb0;
@@ -38,12 +61,24 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: Merriweather, "Open Sans", "Microsoft Yahei", "PingFang SC", -apple-system, sans-serif;
+  font-family: Merriweather, "Open Sans", "PingFang SC", "Microsoft Yahei", -apple-system, sans-serif;
   font-size: 15px;
   line-height: 1.75;
   color: var(--text);
   background: var(--bg);
   transition: background .25s, color .25s;
+}
+
+/* 标题统一用衬线字体，和原站一致 */
+.site-title,
+.post-title,
+.widget-title,
+.profile-name,
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+  font-family: Merriweather, Georgia, "Songti SC", "SimSun", serif;
 }
 
 a { color: var(--primary); text-decoration: none; transition: color .15s; }
@@ -496,6 +531,40 @@ body.dark .post-content code { color: #e5a0a0; }
 .archive-list a { color: var(--text); }
 .archive-list a:hover { color: var(--primary); }
 
+/* 分类索引页 */
+.cat-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  transition: border-color .15s, background .15s, color .15s;
+}
+.cat-item:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.cat-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cat-count {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.tag-cloud-page { margin-top: 16px; gap: 10px; }
+.tag-cloud-page a { font-size: 13.5px; padding: 5px 14px; }
+
 .empty-tip { color: var(--text-dim); }
 
 /* ============ 分页 ============ */
@@ -526,7 +595,25 @@ body.dark .post-content code { color: #e5a0a0; }
   display: flex;
   flex-direction: column;
   gap: 18px;
+  transition: opacity .25s;
 }
+
+/* 桌面端：MENU 把侧栏整体收起，主内容占满 */
+body.sidebar-collapsed .sidebar { display: none; }
+body.sidebar-collapsed .container { grid-template-columns: 1fr; }
+
+/* 移动端抽屉遮罩 */
+.sidebar-mask {
+  display: none;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .38);
+  z-index: 89;
+}
+body.sidebar-open .sidebar-mask { display: block; }
 
 .widget {
   background: var(--card);
@@ -622,9 +709,32 @@ body.dark .post-content code { color: #e5a0a0; }
     grid-template-columns: 1fr;
     padding: 20px 14px 30px;
   }
-  .sidebar { position: static; }
+
+  /* 侧边栏变成左侧抽屉，和 MENU 按钮同侧，默认收在屏幕外 */
+  .sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: auto;
+    bottom: 0;
+    width: 310px;
+    max-width: 86vw;
+    padding: 14px;
+    overflow-y: auto;
+    background: var(--bg);
+    box-shadow: 6px 0 24px rgba(0, 0, 0, .18);
+    transform: translateX(-105%);
+    transition: transform .3s ease;
+    z-index: 90;
+    display: flex;
+  }
+  body.sidebar-open .sidebar { transform: translateX(0); }
+  /* 移动端由 sidebar-open 控制，忽略 collapsed 的隐藏 */
+  body.sidebar-collapsed .sidebar { display: flex; }
+  body.sidebar-collapsed .container { grid-template-columns: 1fr; }
+
   .site-title { font-size: 2rem; }
-  .main-header { height: 52vh; min-height: 320px; }
+  .main-header { height: 60vh; min-height: 340px; }
   .post-full { padding: 26px 20px; }
   .post-card { padding: 20px; }
   .post-nav { grid-template-columns: 1fr; }
@@ -632,19 +742,9 @@ body.dark .post-content code { color: #e5a0a0; }
 }
 
 @media (max-width: 560px) {
-  .navbar-links {
-    position: fixed;
-    top: 56px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    gap: 2px;
-    padding: 10px;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    display: none;
-  }
-  .navbar-links.open { display: flex; }
-  .navbar-links a { padding: 10px 12px; }
+  .site-title { font-size: 1.65rem; }
+  .navbar-links a { padding: 6px 8px; font-size: 13px; }
+  .post-full { padding: 22px 16px; }
+  .post-card { padding: 16px; }
+  .post-meta { gap: 10px; font-size: 12px; }
 }

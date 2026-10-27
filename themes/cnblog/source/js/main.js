@@ -11,14 +11,24 @@
     onScroll();
   }
 
-  // 移动端菜单
+  // MENU：桌面收起/展开侧栏，移动端滑出抽屉
   var menuBtn = document.getElementById('menuBtn');
-  var navLinks = document.getElementById('navLinks');
-  if (menuBtn && navLinks) {
-    menuBtn.addEventListener('click', function () {
-      navLinks.classList.toggle('open');
-    });
+  var sidebarMask = document.getElementById('sidebarMask');
+  function toggleSidebar() {
+    if (window.innerWidth <= 960) {
+      document.body.classList.toggle('sidebar-open');
+    } else {
+      document.body.classList.toggle('sidebar-collapsed');
+    }
   }
+  function closeSidebar() {
+    document.body.classList.remove('sidebar-open');
+  }
+  if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+  if (sidebarMask) sidebarMask.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeSidebar();
+  });
 
   // 深色模式
   var themeBtn = document.getElementById('themeBtn');
@@ -39,13 +49,6 @@
       var dark = !document.body.classList.contains('dark');
       applyTheme(dark);
       localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
-    });
-  }
-
-  // 点击导航后收起移动端菜单
-  if (navLinks) {
-    navLinks.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') navLinks.classList.remove('open');
     });
   }
 })();

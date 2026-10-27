@@ -9,9 +9,10 @@ motto: 星垂平野阔，月涌大江流。
 motto_from: 《旅夜书怀》· 唐代 · 杜甫
 
 # banner 背景图
-# 默认用 SimpleMemory 的官方背景图；想换成自己的图，
-# 用后台的图片上传把图传到 source/images/ 下，再把这里改成 /images/xxx.webp
-banner: https://cdn.cnblogs.com/gh/BNDong/Cnblogs-Theme-SimpleMemory@v2.1.3/dist/images/e58d9f9d0eee6d9b9add.webp
+# 默认使用主题自带的图片（themes/cnblog/source/images/banner.webp），
+# 原博客园那份 CDN 图有防盗链，外站引用会 403，所以不能直接用。
+# 想换成自己的图：用后台上传拿到 /images/xxx.webp，再把这里改掉即可。
+banner: /images/banner.webp
 
 # 头像
 avatar: https://cdn.luogu.com.cn/upload/usericon/386597.png
