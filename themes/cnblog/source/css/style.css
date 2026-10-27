@@ -1024,3 +1024,30 @@ body.sidebar-open .sidebar-mask { display: block; }
 }
 
 body.dark #hexo-blog-encrypt .hbe-error { color: #e57373; }
+/* ============ 加密文章上方的摘要 ============ */
+.post-abstract {
+  margin: 0 0 1.6em;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--panel-2, var(--primary-light));
+}
+
+.post-abstract-label {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  color: var(--primary);
+}
+
+.post-abstract-body {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-light);
+}
+
+.post-abstract-body p { margin: 0; }
+.post-abstract-body img { display: none; }

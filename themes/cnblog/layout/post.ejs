@@ -11,6 +11,16 @@
   </div>
 
   <div class="post-content">
+    <% if (page.password) { %>
+      <%# 加密文章：摘要不加密，放在密码框上方让人知道大概内容 %>
+      <% var abstractHtml = page.abstract || page.excerpt; %>
+      <% if (abstractHtml) { %>
+        <div class="post-abstract">
+          <span class="post-abstract-label">摘要</span>
+          <div class="post-abstract-body"><%- abstractHtml %></div>
+        </div>
+      <% } %>
+    <% } %>
     <%- page.content %>
   </div>
 
