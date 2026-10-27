@@ -1,5 +1,54 @@
-(function () {
+﻿(function () {
   'use strict';
+
+  // 诗句：按来源取（内置 / 一言 API / 仓库 motto.txt）
+  var mottoEl = document.querySelector('.site-motto');
+  var fromEl = document.querySelector('.site-from');
+  if (mottoEl) {
+    var source = mottoEl.dataset.source || 'builtin';
+
+    var applyMotto = function (text, from) {
+      if (!text) return;
+      mottoEl.textContent = text;
+      if (fromEl && from) fromEl.textContent = from;
+    };
+
+    if (source === 'api') {
+      var api = mottoEl.dataset.api;
+      if (api) {
+        fetch(api, { mode: 'cors' })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            var text = d.hitokoto || d.text || d.motto || '';
+            var from = d.from || d.from_who || d.source || '';
+            applyMotto(text, from);
+          })
+          .catch(function () { /* 接口挂了就保留首屏那句 */ });
+      }
+    } else if (source === 'txt') {
+      fetch(mottoEl.dataset.txt || '/motto.txt')
+        .then(function (r) { return r.text(); })
+        .then(function (txt) {
+          var lines = txt.split(/\r?\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+          if (!lines.length) return;
+          var pick = lines[Math.floor(Math.random() * lines.length)];
+          // 格式：句子 —— 出处（破折号后可省，-- 与单个 — 也认）
+          var m = pick.match(/^(.*?)\s*(?:——|—|--)\s*(.+)$/);
+          if (m) applyMotto(m[1].trim(), m[2].trim());
+          else applyMotto(pick, '');
+        })
+        .catch(function () { /* 文件缺失保留首屏那句 */ });
+    } else {
+      var list = [];
+      try {
+        list = JSON.parse(decodeURIComponent(mottoEl.dataset.mottos || '[]'));
+      } catch (e) { list = []; }
+      if (list.length > 1) {
+        var pick = list[Math.floor(Math.random() * list.length)];
+        applyMotto(pick.text, pick.from);
+      }
+    }
+  }
 
   // 滚动后导航栏由透明变实底
   var navbar = document.getElementById('navbar');
