@@ -51,4 +51,52 @@
       localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
     });
   }
+
+  // 目录滚动高亮
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc-wrap .toc-link'));
+  if (tocLinks.length) {
+    var headingMap = {};
+    tocLinks.forEach(function (link) {
+      var id = decodeURIComponent((link.getAttribute('href') || '').replace(/^#/, ''));
+      var el = document.getElementById(id);
+      if (el) headingMap[id] = link;
+    });
+
+    var current = null;
+    function updateActive() {
+      var passed = null;
+      Object.keys(headingMap).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 120) passed = id;
+      });
+      var next = passed ? headingMap[passed] : null;
+      if (next === current) return;
+      if (current) current.classList.remove('active');
+      if (next) {
+        next.classList.add('active');
+        // 让高亮项在目录里保持可见
+        var wrap = next.closest('.toc-wrap');
+        if (wrap) {
+          var top = next.offsetTop - wrap.clientHeight / 2;
+          if (Math.abs(wrap.scrollTop - top) > wrap.clientHeight / 2) wrap.scrollTop = Math.max(0, top);
+        }
+      }
+      current = next;
+    }
+
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    // 点击平滑滚动，抵消固定导航栏的高度
+    tocLinks.forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        var id = decodeURIComponent((link.getAttribute('href') || '').replace(/^#/, ''));
+        var el = document.getElementById(id);
+        if (!el) return;
+        e.preventDefault();
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + id);
+      });
+    });
+  }
 })();

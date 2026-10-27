@@ -1,4 +1,11 @@
 <aside class="sidebar">
+  <% if (is_post() && page.content && page.content.length > 500) { %>
+    <section class="widget toc-widget">
+      <h3 class="widget-title">目录</h3>
+      <div class="toc-wrap"><%- toc(page.content, { list_number: false }) %></div>
+    </section>
+  <% } %>
+
   <% (theme.widgets || []).forEach(function (w) { %>
 
     <% if (w === 'profile') { %>
