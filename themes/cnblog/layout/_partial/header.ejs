@@ -1,0 +1,21 @@
+<nav class="navbar" id="navbar">
+  <button class="menu-btn" id="menuBtn" type="button" aria-label="菜单">☰&nbsp;&nbsp;MENU</button>
+  <div class="navbar-links" id="navLinks">
+    <% Object.keys(theme.menu).forEach(function (name) { %>
+      <a href="<%- url_for(theme.menu[name]) %>"<% if (decodeURI(page.path) === theme.menu[name]) { %> class="active"<% } %>><%- name %></a>
+    <% }) %>
+  </div>
+  <button class="theme-btn" id="themeBtn" type="button" title="切换深色模式">☾</button>
+</nav>
+
+<header class="main-header<%- is_post() ? ' is-post' : '' %>"
+        style="background-image:url('<%- url_for(theme.banner) %>')">
+  <div class="header-inner">
+    <h1 class="site-title"><%- theme.author %></h1>
+    <p class="site-motto"><%- theme.motto %></p>
+    <p class="site-from"><%- theme.motto_from %></p>
+  </div>
+  <% if (is_home()) { %>
+    <a class="scroll-down" href="#main" aria-label="向下">⌄</a>
+  <% } %>
+</header>

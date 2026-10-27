@@ -1,0 +1,46 @@
+# 博客园风格主题（SimpleMemory 等效实现）
+# 视觉参考 Cnblogs-Theme-SimpleMemory，纯静态实现，不依赖其 JS
+
+# 站点主人（显示在 banner 上）
+author: FAKUMARER
+
+# banner 上的格言
+motto: 星垂平野阔，月涌大江流。
+motto_from: 《旅夜书怀》· 唐代 · 杜甫
+
+# banner 背景图
+# 默认用 SimpleMemory 的官方背景图；想换成自己的图，
+# 用后台的图片上传把图传到 source/images/ 下，再把这里改成 /images/xxx.webp
+banner: https://cdn.cnblogs.com/gh/BNDong/Cnblogs-Theme-SimpleMemory@v2.1.3/dist/images/e58d9f9d0eee6d9b9add.webp
+
+# 头像
+avatar: https://cdn.luogu.com.cn/upload/usericon/386597.png
+
+# 侧边栏简介
+intro: 这里是 FAKUMARER 的博客，记录算法竞赛、代码与生活。
+
+# 导航菜单
+menu:
+  首页: /
+  归档: /archives/
+  分类: /categories/
+  标签: /tags/
+
+# 侧边栏显示的 widget 顺序（可注释掉不需要的）
+widgets:
+  - profile
+  - stats
+  - categories
+  - tags
+  - recent
+
+# 页脚
+footer:
+  since: 2026
+  copyright: FAKUMARER
+
+# 评论与阅读量：暂不启用（需要先部署 Waline 等服务）
+# 启用后会在文章页渲染 <div id="comments"></div>
+comments:
+  enable: false
+  serverURL: ''
