@@ -70,3 +70,16 @@ markdown:
     typographer: false
   plugins:
     - "@traptitech/markdown-it-katex"
+
+# 文章加密（hexo-blog-encrypt）
+encrypt:
+  abstract: 这是一篇加密文章，请输入访问密码
+  message: 请输入访问密码
+  wrong_pass_message: 密码不正确，请重试
+  theme: default
+  # 记住密码：密钥存 localStorage，同一篇再访问不用重复输入
+  autoSave: true
+  # salt 跟 permalink 绑定；否则每次构建 salt 变化会让缓存全部失效
+  stableSalt: true
+  kdf:
+    iterations: 600000
