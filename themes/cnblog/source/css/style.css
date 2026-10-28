@@ -1051,3 +1051,60 @@ body.dark #hexo-blog-encrypt .hbe-error { color: #e57373; }
 
 .post-abstract-body p { margin: 0; }
 .post-abstract-body img { display: none; }
+/* ============ 归档 / 分类 / 标签列表 ============ */
+.archive-page { padding-bottom: 10px; }
+
+.archive-year {
+  margin: 1.5em 0 .5em;
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--border);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+.archive-year:first-of-type { margin-top: .8em; }
+
+.archive-item {
+  padding: .5em 0;
+  border-bottom: 1px dashed var(--border);
+}
+.archive-item:last-of-type { border-bottom: none; }
+
+.archive-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.archive-date {
+  flex: 0 0 auto;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.archive-title {
+  font-size: 15px;
+  color: var(--text);
+  transition: color .15s;
+}
+.archive-title:hover { color: var(--primary); }
+
+/* 标题下面的摘要，小一号灰字 */
+.archive-excerpt {
+  margin: 3px 0 0 62px;
+  font-size: 12.8px;
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+
+.archive-total {
+  margin: 1.4em 0 0;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .archive-excerpt { margin-left: 0; }
+}
