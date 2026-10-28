@@ -67,8 +67,10 @@
               var catDepth = catFull.split('/').length - 1;
             %>
             <li class="cat-item<%- catDepth > 0 ? ' cat-child' : '' %>">
-              <a href="<%- url_for(cat.path) %>"><%- catFull %></a>
-              <span class="count"><%- cat.length %></span>
+              <a href="<%- url_for(cat.path) %>">
+                <span class="cat-label"><%- catFull %></span>
+                <span class="count"><%- cat.length %></span>
+              </a>
             </li>
           <% }) %>
         </ul>

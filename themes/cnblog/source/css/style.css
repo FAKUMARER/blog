@@ -696,14 +696,12 @@ body.dark .post-content code { color: #e5a0a0; }
   flex-direction: column;
   gap: 18px;
   transition: opacity .25s;
-  scrollbar-width: thin;
+  /* 隐藏滚动条但保留滚动能力 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.sidebar::-webkit-scrollbar { width: 6px; }
-.sidebar::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
-}
+.sidebar::-webkit-scrollbar { display: none; }
 
 /* 桌面端：MENU 把侧栏整体收起，主内容占满 */
 body.sidebar-collapsed .sidebar { display: none; }
@@ -775,16 +773,32 @@ body.sidebar-open .sidebar-mask { display: block; }
 .widget-list { list-style: none; margin: 0; padding: 0; }
 
 .widget-list li {
+  padding: 0;
+  font-size: 13.5px;
+}
+
+/* 整行都能点：a 撑满 li，名称和计数用 flex 分开 */
+.widget-list li > a {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 6px 0;
-  font-size: 13.5px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  color: var(--text-light);
+  transition: background .15s, color .15s;
 }
 
-.widget-list a { color: var(--text-light); }
-.widget-list a:hover { color: var(--primary); }
+.widget-list li > a:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.widget-list .cat-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .widget-list .count { font-size: 11.5px; color: var(--text-dim); }
 
@@ -1153,17 +1167,39 @@ body.dark #hexo-blog-encrypt .hbe-error { color: #e57373; }
   background: var(--border);
   border-radius: 3px;
 }
-/* 分类层级：子分类缩进，避免和父级看起来并列 */
-.widget-list .cat-item.cat-child,
+/* 分类索引页：子分类缩进 */
 .cat-list .cat-item.cat-child {
-  padding-left: 18px;
+  padding-left: 30px;
   position: relative;
 }
-
-.widget-list .cat-item.cat-child::before,
 .cat-list .cat-item.cat-child::before {
-  content: "└ ";
+  content: "└";
   position: absolute;
-  left: 4px;
+  left: 12px;
+  color: var(--border);
+}
+/* 目录 / 合集 / 分类索引：隐藏滚动条，保留滚动 */
+.toc-wrap,
+.series-list {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.toc-wrap::-webkit-scrollbar,
+.series-list::-webkit-scrollbar { display: none; }
+
+/* 侧栏分类项：覆盖索引页的 .cat-item 样式（那里是 flex 卡片），否则 a 会被当 flex item 收缩 */
+.widget-list .cat-item {
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+.widget-list li > a { width: 100%; box-sizing: border-box; }
+.widget-list li.cat-child > a { padding-left: 22px; position: relative; }
+.widget-list li.cat-child > a::before {
+  content: "└";
+  position: absolute;
+  left: 8px;
   color: var(--border);
 }
