@@ -1,4 +1,4 @@
-<aside class="sidebar">
+﻿<aside class="sidebar">
   <% if (is_post() && page.content && page.content.length > 500) { %>
     <section class="widget toc-widget">
       <h3 class="widget-title">目录</h3>
@@ -58,8 +58,16 @@
         <h3 class="widget-title">分类</h3>
         <ul class="widget-list">
           <% site.categories.sort('-length').each(function (cat) { %>
-            <li>
-              <a href="<%- url_for(cat.path) %>"><%- cat.name %></a>
+            <%
+              // 分类是层级结构，只显示末级名会和父级看起来并列，这里显示完整路径
+              var catFull = decodeURIComponent(cat.path || '')
+                .replace(/^categories\//, '')
+                .replace(/\/$/, '');
+              if (!catFull) catFull = cat.name;
+              var catDepth = catFull.split('/').length - 1;
+            %>
+            <li class="cat-item<%- catDepth > 0 ? ' cat-child' : '' %>">
+              <a href="<%- url_for(cat.path) %>"><%- catFull %></a>
               <span class="count"><%- cat.length %></span>
             </li>
           <% }) %>

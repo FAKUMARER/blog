@@ -1153,3 +1153,17 @@ body.dark #hexo-blog-encrypt .hbe-error { color: #e57373; }
   background: var(--border);
   border-radius: 3px;
 }
+/* 分类层级：子分类缩进，避免和父级看起来并列 */
+.widget-list .cat-item.cat-child,
+.cat-list .cat-item.cat-child {
+  padding-left: 18px;
+  position: relative;
+}
+
+.widget-list .cat-item.cat-child::before,
+.cat-list .cat-item.cat-child::before {
+  content: "└ ";
+  position: absolute;
+  left: 4px;
+  color: var(--border);
+}
