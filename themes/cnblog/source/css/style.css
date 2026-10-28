@@ -1203,3 +1203,37 @@ body.dark #hexo-blog-encrypt .hbe-error { color: #e57373; }
   left: 8px;
   color: var(--border);
 }
+/* ============ 任务列表 ============ */
+.post-content .contains-task-list,
+.post-content .contains-task-list > li,
+.post-content li:has(> input[type="checkbox"]) {
+  list-style: none;
+}
+.post-content .contains-task-list,
+.post-content ul:has(> li > input[type="checkbox"]) {
+  padding-left: 1.2em;
+}
+.post-content .task-list-item {
+  list-style: none;
+  margin: .3em 0;
+}
+.post-content .task-list-item-checkbox {
+  margin-right: 6px;
+  width: 13px;
+  height: 13px;
+  vertical-align: middle;
+  accent-color: var(--primary);
+}
+/* 列表项内的标题（- [ ] ##### xxx）：紧凑显示，像 Typora */
+.post-content li > h1, .post-content li > h2, .post-content li > h3,
+.post-content li > h4, .post-content li > h5, .post-content li > h6 {
+  display: inline;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+.post-content li > h1 a, .post-content li > h2 a, .post-content li > h3 a,
+.post-content li > h4 a, .post-content li > h5 a, .post-content li > h6 a {
+  color: inherit;
+}

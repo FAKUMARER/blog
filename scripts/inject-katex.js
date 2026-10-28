@@ -32,6 +32,19 @@ hexo.extend.filter.register('before_post_render', function (data) {
     }
   );
 
+  // 任务列表项里的 ATX 标题（- [ ] ##### xxx）改成 HTML 标题。
+  // markdown-it 不支持列表项内写标题（##### 不在行首），Typora 支持；这里等价实现。
+  data.content = data.content.replace(
+    /^([ \t]*(?:[-*+]|\d+[.)])[ \t]+)\[([ xX])\][ \t]+(#{1,6})[ \t]+(.+)$/gm,
+    function (m, prefix, mark, hashes, content) {
+      var level = hashes.length;
+      var checked = mark.toLowerCase() === 'x' ? ' checked' : '';
+      var inner = content.replace(/\[([^\]]*)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+      return prefix + '<input type="checkbox" class="task-list-item-checkbox" disabled'
+        + checked + '> <h' + level + '>' + inner + '</h' + level + '>';
+    }
+  );
+
   return data;
 });
 
