@@ -6,7 +6,7 @@ categories:
   - "开始"
 tags:
   - "开始"
-password: "12345"
+password: "123456"
 ---
 
 这是由后台生成的示例文章，可以随时删除。
