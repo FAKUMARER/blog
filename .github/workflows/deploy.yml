@@ -26,11 +26,6 @@ jobs:
         run: npm install
       - name: Build
         run: npx hexo generate
-      # 通知 Bing / Yandex 等 IndexNow 引擎「这些 URL 有更新」。
-      # 失败不影响部署，所以写 continue-on-error。
-      - name: Submit to IndexNow
-        continue-on-error: true
-        run: node tools/indexnow.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -46,3 +41,19 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # 通知 Bing / Yandex 等 IndexNow 引擎「这些 URL 有更新」。
+  # 必须排在 deploy 之后：IndexNow 收到 202 后会去抓 key 文件校验站点所有权，
+  # 站点还没更新时抓到的 404 会让 key 永久失效（403 UserForbiddedToAccessSite）。
+  # 脚本零依赖，只用 Node 内置模块，所以不需要 npm install。
+  indexnow:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Submit to IndexNow
+        continue-on-error: true
+        run: node tools/indexnow.js

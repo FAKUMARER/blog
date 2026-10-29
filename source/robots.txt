@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-
-# 站点首页：https://fakumarer.github.io/blog/
-# 注意：GitHub Pages 项目站点位于 /blog/ 子路径，而 robots.txt 按规范只对
-# 域名根（https://fakumarer.github.io/robots.txt）生效，那份文件不属于本仓库。
-# 因此下面这行只对支持路径级读取的爬虫有效；主流引擎请在站长平台里直接提交 sitemap。
-Sitemap: https://fakumarer.github.io/blog/sitemap.xml
