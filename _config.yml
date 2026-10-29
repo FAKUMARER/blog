@@ -18,6 +18,8 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  # 搜索引擎站点验证文件必须原样输出，不能被当成模板渲染
+  - googlea22eaa0765d1351b.html
 
 new_post_name: :title.md
 default_layout: post
