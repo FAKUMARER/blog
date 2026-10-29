@@ -20,7 +20,16 @@
         <span class="series-count"><%- catData.length %> 篇</span>
       </h3>
       <ol class="series-list">
-        <% catData.posts.sort('date').each(function (p) { %>
+        <%
+          // 按文件夹里的自然顺序展示：先看 front-matter 的 order，再退回文件名
+          var seriesPosts = catData.posts.toArray().sort(function (a, b) {
+            var ao = a.order != null ? Number(a.order) : Infinity;
+            var bo = b.order != null ? Number(b.order) : Infinity;
+            if (ao !== bo) return ao - bo;
+            return String(a.source || "").localeCompare(String(b.source || ""), "zh");
+          });
+        %>
+        <% seriesPosts.forEach(function (p) { %>
           <li<%- p.path === page.path ? ' class="active"' : '' %>>
             <a href="<%- url_for(p.path) %>"><%- p.title %></a>
           </li>
