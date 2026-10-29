@@ -26,6 +26,11 @@ jobs:
         run: npm install
       - name: Build
         run: npx hexo generate
+      # 通知 Bing / Yandex 等 IndexNow 引擎「这些 URL 有更新」。
+      # 失败不影响部署，所以写 continue-on-error。
+      - name: Submit to IndexNow
+        continue-on-error: true
+        run: node tools/indexnow.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -1,6 +1,134 @@
-﻿<meta charset="utf-8">
+<%
+  /* ================= 工具函数 ================= */
+  var plain = function (v) {
+    return String(v == null ? '' : v).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  };
+  var siteName = config.title || '';
+  var siteDesc = plain(config.description) || siteName;
+  var inHome = is_home();
+  var pageNo = page.current > 1 ? ' - 第 ' + page.current + ' 页' : '';
+
+  /* 当前页相对路径 → 绝对 URL。
+     这里不用 full_url_for：它内部会先 encodeURL，我们再 encodeURI 会变成
+     双重编码（%E6 → %25E6），而且它的 root 拼接结果依赖版本，实测丢了 /blog/。
+     自己拼 base 最可控。 */
+  var baseUrl = String(config.url || '').replace(/\/+$/, '') + String(config.root || '/');
+  if (baseUrl.charAt(baseUrl.length - 1) !== '/') baseUrl += '/';
+
+  var relPath = page.path || '';
+  if (relPath === 'index.html') relPath = '';
+  else if (/\/index\.html$/.test(relPath)) relPath = relPath.replace(/index\.html$/, '');
+  var pageUrl = encodeURI(baseUrl + relPath.replace(/^\/+/, ''));
+
+  /* ================= 每页独立的 description ================= */
+  var desc = '';
+  if (page.description && !page.password) desc = plain(page.description);
+  if (!desc) {
+    // 先判 is_post()：文章的 page 上也带 category/tags 属性，
+    // 否则会误命中下面的 is_category() 分支。
+    if (is_post()) {
+      desc = page.title ? plain(page.title) + ' - ' + siteName : siteDesc;
+    } else if (inHome) {
+      desc = page.current > 1 ? siteDesc + '（第 ' + page.current + ' 页）' : siteDesc;
+    } else if (is_category()) {
+      desc = '分类「' + plain(page.category) + '」下的全部文章 - ' + siteName + (pageNo ? '（第 ' + page.current + ' 页）' : '');
+    } else if (is_tag()) {
+      desc = '标签「' + plain(page.tag) + '」下的全部文章 - ' + siteName + (pageNo ? '（第 ' + page.current + ' 页）' : '');
+    } else if (is_archive()) {
+      var arDesc = '文章归档';
+      if (page.year && page.month) arDesc = page.year + ' 年 ' + page.month + ' 月归档';
+      else if (page.year) arDesc = page.year + ' 年归档';
+      desc = arDesc + ' - ' + siteName + (pageNo ? '（第 ' + page.current + ' 页）' : '');
+    } else if (page.title) {
+      desc = plain(page.title) + ' - ' + siteName;
+    } else {
+      desc = siteDesc;
+    }
+  }
+  if (desc.length > 160) desc = desc.slice(0, 157) + '…';
+
+  /* ================= 标题 =================
+     列表页（分页 / 分类 / 标签 / 归档）默认没有 page.title，
+     不补的话这些页的 title 全是站点名，构成重复标题，对收录不利。
+     归档还会按年/月生成子页，必须带上年月才能唯一。 */
+  var titleText;
+  if (is_post()) {
+    titleText = page.title ? plain(page.title) + ' - ' + siteName : siteName;
+  } else if (inHome) {
+    titleText = siteName + pageNo;
+  } else if (is_category()) {
+    titleText = '分类：' + plain(page.category) + pageNo + ' - ' + siteName;
+  } else if (is_tag()) {
+    titleText = '标签：' + plain(page.tag) + pageNo + ' - ' + siteName;
+  } else if (is_archive()) {
+    var arTitle = '归档';
+    if (page.year && page.month) arTitle = page.year + ' 年 ' + page.month + ' 月归档';
+    else if (page.year) arTitle = page.year + ' 年归档';
+    titleText = arTitle + pageNo + ' - ' + siteName;
+  } else if (page.title) {
+    titleText = plain(page.title) + ' - ' + siteName;
+  } else {
+    titleText = siteName;
+  }
+
+  /* ================= 关键词 ================= */
+  var kwList = [];
+  if (page.keywords) kwList.push(plain(page.keywords));
+  if (page.tags && page.tags.length) {
+    page.tags.each(function (t) { kwList.push(t.name); });
+  }
+  if (config.keywords) {
+    // 站点关键词是逗号分隔的一整串，拆开再并进去重，避免和文章标签叠加成 "数论,数论"
+    String(config.keywords).split(/[,，]/).forEach(function (k) {
+      k = plain(k);
+      if (k) kwList.push(k);
+    });
+  }
+  var kwText = kwList.filter(function (s, i) {
+    return s && kwList.indexOf(s) === i;
+  }).join(',');
+
+  var ogImage = encodeURI(baseUrl + 'images/banner.webp');
+%>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><% if (page.title && !is_home()) { %><%- page.title %> - <% } %><%- config.title %></title>
-<meta name="description" content="<%- config.description || '' %>">
-<% if (page.keywords) { %><meta name="keywords" content="<%- page.keywords %>"><% } %>
-<link rel="stylesheet" href="<%- url_for('/css/style.css') %>?v=<%- typeof assetV !== 'undefined' ? assetV : '1' %>">
+<title><%= titleText %></title>
+<meta name="description" content="<%= desc %>">
+<% if (kwText) { %><meta name="keywords" content="<%= kwText %>"><% } %>
+<meta name="author" content="<%= config.author || siteName %>">
+<link rel="canonical" href="<%= pageUrl %>">
+<link rel="icon" href="<%= url_for('favicon.svg') %>" type="image/svg+xml">
+<meta property="og:type" content="<%= is_post() ? 'article' : 'website' %>">
+<meta property="og:site_name" content="<%= siteName %>">
+<meta property="og:title" content="<%= titleText %>">
+<meta property="og:description" content="<%= desc %>">
+<meta property="og:url" content="<%= pageUrl %>">
+<meta property="og:image" content="<%= ogImage %>">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= titleText %>">
+<meta name="twitter:description" content="<%= desc %>">
+<% if (is_post()) { %>
+<%
+  /* 文章页结构化数据：让搜索引擎明确知道作者、发布时间、正文标题 */
+  var ld = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: plain(page.title),
+    description: desc,
+    url: pageUrl,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+    author: { '@type': 'Person', name: config.author || siteName },
+    publisher: { '@type': 'Organization', name: siteName },
+    image: ogImage
+  };
+  if (page.date) ld.datePublished = date(page.date, 'YYYY-MM-DDTHH:mm:ssZ');
+  if (page.updated) ld.dateModified = date(page.updated, 'YYYY-MM-DDTHH:mm:ssZ');
+  if (page.tags && page.tags.length) {
+    ld.keywords = [];
+    page.tags.each(function (t) { ld.keywords.push(t.name); });
+  }
+%>
+<script type="application/ld+json"><%- JSON.stringify(ld) %></script>
+<% } %>
+<link rel="stylesheet" href="<%= url_for('/css/style.css') %>?v=<%= typeof assetV !== 'undefined' ? assetV : '1' %>">
