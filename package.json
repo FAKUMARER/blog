@@ -23,6 +23,7 @@
     "hexo-server": "^3.0.0",
     "hexo-theme-landscape": "^1.0.0",
     "katex": "^0.16.11",
-    "hexo-blog-encrypt": "^4.1.0"
+    "hexo-blog-encrypt": "^4.1.0",
+    "markdown-it-task-lists": "^2.1.1"
   }
 }
